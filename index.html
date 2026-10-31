@@ -1,0 +1,261 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="description" content="BookFinder: encuentra libros y ejercicios de tu instituto.">
+    <title>BookFinder — Biblioteca escolar</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <a href="#" class="logo" onclick="showPage('home'); return false;">
+            <span class="logo-icon">B</span>
+            <span>BookFinder</span>
+        </a>
+
+        <nav class="nav-links">
+            <button class="nav-link active" data-page="home" onclick="showPage('home')">Inicio</button>
+            <button class="nav-link" data-page="library" onclick="showPage('library')">Biblioteca</button>
+        </nav>
+
+        <button class="admin-button" onclick="showPage('admin')">
+            <span>⚙</span> Administrar
+        </button>
+    </header>
+
+    <main>
+
+        <!-- INICIO -->
+        <section id="home" class="page active">
+
+            <div class="hero">
+                <div class="hero-label">
+                    <span class="status-dot"></span>
+                    TU BIBLIOTECA ESCOLAR
+                </div>
+
+                <h1>Encuentra tu<br><span>próximo ejercicio.</span></h1>
+
+                <p class="hero-description">
+                    Busca entre los libros de tu instituto.
+                    Encuentra asignaturas, páginas y ejercicios en segundos.
+                </p>
+
+                <div class="search-box">
+                    <span class="search-icon">⌕</span>
+                    <input
+                        type="text"
+                        id="mainSearch"
+                        placeholder="Busca un libro, tema o ejercicio..."
+                        onkeydown="if(event.key==='Enter') searchBooks()"
+                    >
+                    <button onclick="searchBooks()">Buscar</button>
+                </div>
+
+                <div class="search-hints">
+                    <span>Prueba:</span>
+                    <button onclick="quickSearch('ecuaciones')">Ecuaciones</button>
+                    <button onclick="quickSearch('gramática')">Gramática</button>
+                    <button onclick="quickSearch('fracciones')">Fracciones</button>
+                </div>
+            </div>
+
+            <section class="content-section">
+                <div class="section-heading">
+                    <div>
+                        <span class="eyebrow">EXPLORA</span>
+                        <h2>Biblioteca</h2>
+                    </div>
+                    <button class="text-button" onclick="showPage('library')">
+                        Ver todos →
+                    </button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number" id="homeBookCount">0</span>
+                        <span class="stat-label">Libros registrados</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="homeExerciseCount">0</span>
+                        <span class="stat-label">Ejercicios indexados</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="homeSubjectCount">0</span>
+                        <span class="stat-label">Asignaturas</span>
+                    </div>
+                </div>
+
+                <div id="homeBooks" class="books-grid"></div>
+            </section>
+
+            <section class="content-section">
+                <div class="section-heading">
+                    <div>
+                        <span class="eyebrow">CÓMO FUNCIONA</span>
+                        <h2>En tres pasos.</h2>
+                    </div>
+                </div>
+
+                <div class="steps-grid">
+                    <article class="step-card">
+                        <span class="step-number">01</span>
+                        <h3>Busca</h3>
+                        <p>Introduce el nombre de un libro, tema o ejercicio.</p>
+                    </article>
+                    <article class="step-card">
+                        <span class="step-number">02</span>
+                        <h3>Encuentra</h3>
+                        <p>Consulta los resultados y sus referencias exactas.</p>
+                    </article>
+                    <article class="step-card">
+                        <span class="step-number">03</span>
+                        <h3>Localiza</h3>
+                        <p>Descubre en qué página y libro está el ejercicio.</p>
+                    </article>
+                </div>
+            </section>
+
+        </section>
+
+        <!-- BIBLIOTECA -->
+        <section id="library" class="page">
+
+            <div class="page-header">
+                <span class="eyebrow">CATÁLOGO ESCOLAR</span>
+                <h1>Biblioteca.</h1>
+                <p>Todos los libros registrados en BookFinder.</p>
+            </div>
+
+            <div class="library-toolbar">
+                <input
+                    type="text"
+                    id="librarySearch"
+                    placeholder="Filtrar libros..."
+                    oninput="renderLibrary()"
+                >
+
+                <select id="subjectFilter" onchange="renderLibrary()">
+                    <option value="all">Todas las asignaturas</option>
+                </select>
+            </div>
+
+            <div id="libraryBooks" class="books-grid"></div>
+
+        </section>
+
+        <!-- RESULTADOS -->
+        <section id="results" class="page">
+
+            <div class="page-header">
+                <span class="eyebrow">BUSCADOR</span>
+                <h1>Resultados.</h1>
+                <p id="resultsDescription">Estos son los resultados de tu búsqueda.</p>
+            </div>
+
+            <div id="resultsList" class="results-list"></div>
+
+            <button class="secondary-button" onclick="showPage('home')">
+                ← Volver al inicio
+            </button>
+
+        </section>
+
+        <!-- ADMINISTRACIÓN -->
+        <section id="admin" class="page">
+
+            <div class="page-header">
+                <span class="eyebrow">GESTIÓN DE CONTENIDO</span>
+                <h1>Administración.</h1>
+                <p>Gestiona los libros y ejercicios de la biblioteca.</p>
+            </div>
+
+            <div class="admin-stats">
+                <div class="stat-card">
+                    <span class="stat-number" id="adminBookCount">0</span>
+                    <span class="stat-label">Libros</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="adminExerciseCount">0</span>
+                    <span class="stat-label">Ejercicios</span>
+                </div>
+            </div>
+
+            <div class="admin-layout">
+
+                <div class="admin-card">
+                    <h2>Añadir libro</h2>
+                    <p>Registra un nuevo libro en la biblioteca.</p>
+
+                    <form id="bookForm">
+                        <label>Nombre del libro</label>
+                        <input type="text" id="bookName" placeholder="Matemáticas 3 ESO" required>
+
+                        <label>Asignatura</label>
+                        <input type="text" id="bookSubject" placeholder="Matemáticas" required>
+
+                        <label>Curso</label>
+                        <input type="text" id="bookCourse" placeholder="3 ESO">
+
+                        <label>Editorial</label>
+                        <input type="text" id="bookPublisher" placeholder="Santillana">
+
+                        <label>ISBN (opcional)</label>
+                        <input type="text" id="bookISBN" placeholder="978...">
+
+                        <button type="submit" class="primary-button">Añadir libro</button>
+                    </form>
+                </div>
+
+                <div class="admin-card">
+                    <h2>Añadir ejercicio</h2>
+                    <p>Registra una referencia a un ejercicio.</p>
+
+                    <form id="exerciseForm">
+                        <label>Libro</label>
+                        <select id="exerciseBook" required>
+                            <option value="">Selecciona un libro</option>
+                        </select>
+
+                        <label>Página</label>
+                        <input type="number" id="exercisePage" min="1" placeholder="57" required>
+
+                        <label>Número de ejercicio</label>
+                        <input type="text" id="exerciseNumber" placeholder="12" required>
+
+                        <label>Tema</label>
+                        <input type="text" id="exerciseTopic" placeholder="Ecuaciones">
+
+                        <label>Descripción</label>
+                        <textarea id="exerciseDescription" rows="3" placeholder="Resolver ecuaciones de segundo grado..."></textarea>
+
+                        <button type="submit" class="primary-button">Añadir ejercicio</button>
+                    </form>
+                </div>
+
+            </div>
+
+            <div class="admin-card registered-card">
+                <h2>Libros registrados</h2>
+                <div id="adminBookList"></div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="footer-logo">BookFinder.</div>
+        <p>Una biblioteca escolar más inteligente.</p>
+        <span>BOOKFINDER © 2026</span>
+    </footer>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
